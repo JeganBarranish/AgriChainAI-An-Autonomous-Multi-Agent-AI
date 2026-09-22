@@ -1,0 +1,52 @@
+==========================================================================
+CANDIDATE DATASET AUDIT: Crop_recommendation.csv
+==========================================================================
+Source : Kaggle 'Crop Recommendation Dataset' (atharvaingle), mirrored at
+         github.com/aakashr02/Crop-Recommendation/data/Crop_recommendation.csv
+Origin : built by augmenting Indian rainfall, climate and fertilizer datasets.
+         => semi-synthetic, NOT raw farm observations. Stated for the record.
+
+Shape (2200, 8) | crops 22 | per-crop count [100]
+missing 0 | duplicate rows 0
+
+--- ANOVA per feature by crop ---
+  N             F=    897.6 p=0.00e+00 spread=2.68 SD
+  P             F=   1885.7 p=0.00e+00 spread=3.57 SD
+  K             F=  27238.4 p=0.00e+00 spread=3.75 SD
+  temperature   F=    102.2 p=4.02e-305 spread=2.93 SD
+  humidity      F=   3103.7 p=0.00e+00 spread=3.50 SD
+  ph            F=     60.3 p=6.49e-199 spread=2.05 SD
+  rainfall      F=    605.5 p=0.00e+00 spread=3.85 SD
+
+--- Mutual information (H(Crop)=3.091 nats) ---
+  humidity      1.7300 ( 56.0 % of H)
+  K             1.6392 ( 53.0 % of H)
+  rainfall      1.6374 ( 53.0 % of H)
+  P             1.3040 ( 42.2 % of H)
+  temperature   1.0179 ( 32.9 % of H)
+  N             1.0004 ( 32.4 % of H)
+  ph            0.6861 ( 22.2 % of H)
+  TOTAL 9.0149 nats (292 % of H)
+
+--- Held-out accuracy (80/20 stratified, chance=4.55 %) ---
+  Logistic Regression     97.27 %
+  Random Forest (300)     99.55 %
+
+--- Permutation test ---
+  TRUE 99.32 % | SHUFFLED 3.41 % | gap +95.91 pts
+  5-fold CV (RF): 99.41 %
+
+--- AGF-BRC dual-branch suitability ---
+  SOIL branch  (N,P,K,ph)               alone ->  74.55 %
+  CLIMATE branch (temp,humidity,rain)   alone ->  93.64 %
+  BOTH branches fused                         ->  99.32 %
+  => fusion beats the best single branch, so the attention gate has real work.
+
+--- LIMITATIONS (must be stated in any write-up) ---
+  1. No Yield and no Days_to_Harvest column -> AGF-BRC Stage 3 currently has
+     3 heads; only the crop head can be honestly supervised on this file.
+  2. 22 crops, but crop_metadata.py covers 6. Wheat/Barley/Soybean are ABSENT
+     here; only Rice/Maize/Cotton overlap. Economic table needs real prices.
+  3. 2,200 rows (100/crop) -> small; use stratified CV, not a single split.
+  4. Semi-synthetic provenance; ~99 % is near-separable, so a plain baseline
+     already scores 97-99 %. Accuracy alone will not demonstrate novelty.

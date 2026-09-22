@@ -1,0 +1,445 @@
+
+[FarmAgent] Data source: Crop_recommendation.csv (8 MSP-priced crops)  (seed=42)
+
+==============================================================
+DATASET QUALITY REPORT - Crop_recommendation.csv (8 MSP-priced crops)
+==============================================================
+Samples: 800   Columns: 8
+Duplicate rows: 0
+Missing values: none
+
+Per-crop sample counts:
+  rice              100  (12.50 %)
+  maize             100  (12.50 %)
+  cotton            100  (12.50 %)
+  pigeonpeas        100  (12.50 %)
+  mungbean          100  (12.50 %)
+  blackgram         100  (12.50 %)
+  chickpea          100  (12.50 %)
+  jute              100  (12.50 %)
+  All 8 crops present: True
+  Imbalance ratio (max/min): 1.00
+
+Numeric feature statistics:
+           N      P      K    ph  temperature  humidity  rainfall
+mean   59.46  54.92  32.32  6.66        25.02     65.30    115.24
+std    34.22  12.42  20.16  0.76         4.29     22.28     63.67
+min     0.00  35.00  15.00  4.55        17.02     14.26     36.12
+max   140.00  80.00  85.00  8.87        36.98     90.00    298.56
+Impossible values: none
+
+NOTE: this dataset has no yield and no duration column.
+      Stage 3 will train with a MASKED multi-task loss (crop head
+      only). No yield/duration targets are fabricated.
+
+==============================================================
+CROP-SIGNAL AUDIT (is the label learnable at all?)
+==============================================================
+  MI(humidity                   ; crop) = 1.33798
+  MI(rainfall                   ; crop) = 1.29972
+  MI(N                          ; crop) = 1.09719
+  MI(temperature                ; crop) = 1.00313
+  MI(K                          ; crop) = 0.88850
+  MI(P                          ; crop) = 0.49114
+  MI(ph                         ; crop) = 0.46396
+  mean MI across features    = 0.94023
+  label entropy H(crop)      = 2.07944 nats (8 classes, chance = 12.50 %)
+  VERDICT: crop signal present — the classifier can beat chance.
+
+==============================================================
+SPLIT (stratified, seed=42)
+==============================================================
+  train      560 samples
+  val        120 samples
+  test       120 samples
+  soil branch dim 4  | climate branch dim 3
+
+  Training-set class distribution:
+    rice              70
+    maize             70
+    cotton            70
+    pigeonpeas        70
+    mungbean          70
+    blackgram         70
+    chickpea          70
+    jute              70
+  Imbalance ratio (max/min): 1.00  -> balanced, no resampling needed
+
+==============================================================
+PWCE PROFIT WEIGHTS (mean must be 1.0)
+==============================================================
+  crop              raw   capped   source
+  rice            1.057    1.052   MSP paddy-common KMS2025-26 Rs2369/qtl; CACP
+  maize           1.048    1.043   MSP maize KMS2025-26 Rs2400/qtl; CACP yield 
+  cotton          1.207    1.202   MSP cotton medium-staple KMS2025-26 Rs7710/q
+  pigeonpeas      0.972    0.967   MSP tur/arhar KMS2025-26 Rs8000/qtl; CACP yi
+  mungbean        0.464    0.498   MSP moong KMS2025-26 Rs8768/qtl; CACP yield 
+  blackgram       0.530    0.528   MSP urad KMS2025-26 Rs7800/qtl; CACP yield 6
+  chickpea        0.807    0.803   MSP gram RMS2026-27 Rs5875/qtl; yield 12.24 
+  jute            1.916    1.907   MSP raw jute TD-3 2025-26 Rs5650/qtl; yield 
+  raw    mean=1.000 min=0.464 max=1.916 ratio=4.13
+  capped mean=1.000 min=0.498 max=1.907 ratio=3.83
+  Cap = [0.5, 2.0] then renormalized to mean 1.0, so profit can
+  break ties between plausible crops without overriding agronomy.
+
+==============================================================
+STAGES 1-3: AGF-BRC training (PWCE crop head)
+==============================================================
+
+  [config 1/4] {'branch_hidden': 64, 'branch_out': 64, 'trunk_hidden': 128, 'dropout': 0.2, 'lr': 0.001}
+    multi-task targets: crop=yes  yield=MASKED OUT (absent)  duration=MASKED OUT (absent)
+    epoch   1/150 | train loss 2.0835 acc 0.1375 | val loss 2.0657 acc 0.1833
+    epoch  10/150 | train loss 1.1239 acc 0.5089 | val loss 0.9501 acc 0.4917
+    epoch  20/150 | train loss 0.2596 acc 0.9125 | val loss 0.1971 acc 0.9417
+    epoch  30/150 | train loss 0.1181 acc 0.9589 | val loss 0.0945 acc 0.9750
+    early stop at epoch 37 (no val improvement for 15 epochs)
+    restored best checkpoint from epoch 22 (val acc 0.9750)
+  -> validation accuracy 0.9750
+
+  [config 2/4] {'branch_hidden': 64, 'branch_out': 64, 'trunk_hidden': 128, 'dropout': 0.1, 'lr': 0.0005}
+    multi-task targets: crop=yes  yield=MASKED OUT (absent)  duration=MASKED OUT (absent)
+    epoch   1/150 | train loss 2.0858 acc 0.1286 | val loss 2.0766 acc 0.1333
+    epoch  10/150 | train loss 1.8646 acc 0.4893 | val loss 1.8054 acc 0.4833
+    epoch  20/150 | train loss 0.7231 acc 0.6286 | val loss 0.6612 acc 0.6500
+    epoch  30/150 | train loss 0.2677 acc 0.9286 | val loss 0.2316 acc 0.9500
+    epoch  40/150 | train loss 0.1639 acc 0.9446 | val loss 0.1201 acc 0.9750
+    epoch  50/150 | train loss 0.1107 acc 0.9732 | val loss 0.0958 acc 0.9750
+    early stop at epoch 59 (no val improvement for 15 epochs)
+    restored best checkpoint from epoch 44 (val acc 0.9833)
+  -> validation accuracy 0.9833
+
+  [config 3/4] {'branch_hidden': 32, 'branch_out': 32, 'trunk_hidden': 64, 'dropout': 0.2, 'lr': 0.001}
+    multi-task targets: crop=yes  yield=MASKED OUT (absent)  duration=MASKED OUT (absent)
+    epoch   1/150 | train loss 2.0641 acc 0.1321 | val loss 2.0565 acc 0.1833
+    epoch  10/150 | train loss 1.8889 acc 0.3607 | val loss 1.8410 acc 0.3750
+    epoch  20/150 | train loss 0.8832 acc 0.5696 | val loss 0.7599 acc 0.6333
+    epoch  30/150 | train loss 0.4468 acc 0.8196 | val loss 0.3078 acc 0.9083
+    epoch  40/150 | train loss 0.2532 acc 0.9304 | val loss 0.1609 acc 0.9500
+    epoch  50/150 | train loss 0.1678 acc 0.9429 | val loss 0.1192 acc 0.9583
+    epoch  60/150 | train loss 0.1327 acc 0.9661 | val loss 0.0944 acc 0.9583
+    epoch  70/150 | train loss 0.1115 acc 0.9661 | val loss 0.0749 acc 0.9750
+    early stop at epoch 74 (no val improvement for 15 epochs)
+    restored best checkpoint from epoch 59 (val acc 0.9750)
+  -> validation accuracy 0.9750
+
+  [config 4/4] {'branch_hidden': 128, 'branch_out': 64, 'trunk_hidden': 128, 'dropout': 0.3, 'lr': 0.0005}
+    multi-task targets: crop=yes  yield=MASKED OUT (absent)  duration=MASKED OUT (absent)
+    epoch   1/150 | train loss 2.0733 acc 0.1286 | val loss 2.0640 acc 0.1250
+    epoch  10/150 | train loss 1.7714 acc 0.5071 | val loss 1.6927 acc 0.5167
+    epoch  20/150 | train loss 0.5950 acc 0.7714 | val loss 0.4582 acc 0.9000
+    epoch  30/150 | train loss 0.2453 acc 0.9214 | val loss 0.1648 acc 0.9583
+    epoch  40/150 | train loss 0.1611 acc 0.9554 | val loss 0.1058 acc 0.9583
+    epoch  50/150 | train loss 0.1151 acc 0.9679 | val loss 0.0911 acc 0.9667
+    epoch  60/150 | train loss 0.0877 acc 0.9714 | val loss 0.0904 acc 0.9667
+    early stop at epoch 62 (no val improvement for 15 epochs)
+    restored best checkpoint from epoch 47 (val acc 0.9833)
+  -> validation accuracy 0.9833
+
+  Selected config (by VALIDATION accuracy 0.9833): {'branch_hidden': 64, 'branch_out': 64, 'trunk_hidden': 128, 'dropout': 0.1, 'lr': 0.0005}
+
+==============================================================
+STAGE 2: ATTENTION GATE DIAGNOSTICS
+==============================================================
+  mean gate activation      : 0.9429
+  std within a sample       : 0.1388
+  std across samples        : 0.0012
+  saturated <0.05 / >0.95   : 0.000 / 0.900
+  -> gate is NEAR-IDENTITY: gate is saturated and almost constant across samples,
+     so Stage 2 fusion is close to plain concatenation on this dataset
+
+==============================================================
+STAGE 4: gradient-boosted residual correction
+==============================================================
+  SKIPPED - this dataset has no yield/duration targets, so there
+  is no residual to correct. Stage 4 is a documented no-op here.
+  (Crop classification is never affected by Stage 4.)
+
+==============================================================
+5-FOLD STRATIFIED CV (small dataset)
+==============================================================
+  Baselines are scored on the SAME folds, because a single 15 %
+  test split of this dataset is only ~120 rows -- one sample there
+  moves accuracy by ~0.8 pts, which is too noisy to rank models.
+  fold 1/5: n_test= 160  AGF-BRC 0.9688  | LR 0.9688  RF 0.9875
+  fold 2/5: n_test= 160  AGF-BRC 0.9812  | LR 0.9750  RF 0.9812
+  fold 3/5: n_test= 160  AGF-BRC 0.9750  | LR 0.9750  RF 1.0000
+  fold 4/5: n_test= 160  AGF-BRC 0.9688  | LR 0.9625  RF 0.9938
+  fold 5/5: n_test= 160  AGF-BRC 0.9625  | LR 0.9688  RF 0.9875
+
+  AGF-BRC                mean 0.9713  std 0.0064  min 0.9625  max 0.9812
+  Logistic Regression    mean 0.9700  std 0.0047  min 0.9625  max 0.9750
+  Random Forest          mean 0.9900  std 0.0064  min 0.9812  max 1.0000
+
+  NOTE: the config was chosen on the single split's validation set,
+  whose rows recur in these folds, so treat the AGF-BRC number as
+  mildly optimistic. The single-split test accuracy is the unbiased
+  one. Baselines had no comparable tuning, so if a baseline wins here
+  that result stands.
+
+==============================================================
+AGF-BRC FINAL EVALUATION
+==============================================================
+
+Dataset:              Crop_recommendation.csv (8 MSP-priced crops)
+  Training samples:   560
+  Validation samples: 120
+  Test samples:       120
+  Classes:            8
+
+Best configuration (selected on validation): {'branch_hidden': 64, 'branch_out': 64, 'trunk_hidden': 128, 'dropout': 0.1, 'lr': 0.0005}
+  Validation crop accuracy: 98.33 %
+
+Crop Classification Accuracy: 95.83 %   (chance = 12.50 %)
+5-fold CV accuracy:            97.12 % +/- 0.64 %
+Yield MAE:                    n/a (no yield target in this dataset)
+Duration MAE:                 n/a (no duration target in this dataset)
+
+==============================================================
+PER-CLASS PERFORMANCE
+==============================================================
+              precision    recall  f1-score   support
+
+        rice      0.812     0.867     0.839        15
+       maize      1.000     1.000     1.000        15
+      cotton      1.000     1.000     1.000        15
+  pigeonpeas      1.000     1.000     1.000        15
+    mungbean      1.000     1.000     1.000        15
+   blackgram      1.000     1.000     1.000        15
+    chickpea      1.000     1.000     1.000        15
+        jute      0.857     0.800     0.828        15
+
+    accuracy                          0.958       120
+   macro avg      0.959     0.958     0.958       120
+weighted avg      0.959     0.958     0.958       120
+
+==============================================================
+CONFUSION MATRIX (rows = actual, cols = predicted)
+==============================================================
+            rice  maize  cotton  pigeonpeas  mungbean  blackgram  chickpea  jute
+rice          13      0       0           0         0          0         0     2
+maize          0     15       0           0         0          0         0     0
+cotton         0      0      15           0         0          0         0     0
+pigeonpeas     0      0       0          15         0          0         0     0
+mungbean       0      0       0           0        15          0         0     0
+blackgram      0      0       0           0         0         15         0     0
+chickpea       0      0       0           0         0          0        15     0
+jute           3      0       0           0         0          0         0    12
+
+==============================================================
+PREDICTION DISTRIBUTION (collapse check)
+==============================================================
+  rice         predicted     16   (actual     15)
+  maize        predicted     15   (actual     15)
+  cotton       predicted     15   (actual     15)
+  pigeonpeas   predicted     15   (actual     15)
+  mungbean     predicted     15   (actual     15)
+  blackgram    predicted     15   (actual     15)
+  chickpea     predicted     15   (actual     15)
+  jute         predicted     14   (actual     15)
+  -> 8/8 classes predicted; no collapse
+
+==============================================================
+BASELINE VS AGF-BRC (identical split)
+==============================================================
+  model                   single split          k-fold CV
+  Logistic Regression           94.17 %        97.00 % +/-0.47
+  Random Forest                 99.17 %        99.00 % +/-0.64
+  AGF-BRC                       95.83 %        97.12 % +/-0.64
+
+  HONEST NOTE: Random Forest outperforms AGF-BRC by 1.87 pts on k-fold CV.
+  With only a few hundred training rows and 7 features, tree
+  ensembles typically beat neural nets on tabular data. AGF-BRC's
+  justification on this dataset is therefore NOT raw accuracy; it
+  is the multi-task heads plus the economic coupling (PWCE at
+  training time, guarded profit re-ranking at inference), which
+  the baselines do not provide. Do not claim an accuracy win.
+==============================================================
+
+==============================================================
+POST-TRAINING TEST HARNESS (Stage 5 economic recommendation)
+==============================================================
+
+--- Test instance 1: {'N': 90, 'P': 42, 'K': 43, 'ph': 6.5, 'temperature': 21, 'humidity': 82, 'rainfall': 200, 'land_area_ha': 2.0} ---
+{
+  "best_crop": {
+    "crop": "jute",
+    "confidence": 0.217,
+    "expected_yield_t_per_ha": 2.79,
+    "expected_profit_inr": 126501.0,
+    "estimate_source": "reference_table_estimate",
+    "harvest_month": "December",
+    "harvest_date_estimate": "2026-12-29"
+  },
+  "alternatives": [
+    {
+      "crop": "rice",
+      "confidence": 0.782,
+      "expected_yield_t_per_ha": 4.42,
+      "expected_profit_inr": 69804.84,
+      "estimate_source": "reference_table_estimate"
+    },
+    {
+      "crop": "maize",
+      "confidence": 0.0,
+      "expected_yield_t_per_ha": 3.88,
+      "expected_profit_inr": 69184.0,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    },
+    {
+      "crop": "cotton",
+      "confidence": 0.0,
+      "expected_yield_t_per_ha": 1.55,
+      "expected_profit_inr": 79722.2,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    }
+  ]
+}
+
+--- Test instance 2: {'N': 80, 'P': 45, 'K': 20, 'ph': 6.8, 'temperature': 24, 'humidity': 65, 'rainfall': 90, 'land_area_ha': 1.0} ---
+{
+  "best_crop": {
+    "crop": "maize",
+    "confidence": 0.979,
+    "expected_yield_t_per_ha": 3.88,
+    "expected_profit_inr": 34592.0,
+    "estimate_source": "reference_table_estimate",
+    "harvest_month": "December",
+    "harvest_date_estimate": "2026-12-19"
+  },
+  "alternatives": [
+    {
+      "crop": "cotton",
+      "confidence": 0.017,
+      "expected_yield_t_per_ha": 1.55,
+      "expected_profit_inr": 39861.1,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    },
+    {
+      "crop": "mungbean",
+      "confidence": 0.002,
+      "expected_yield_t_per_ha": 0.52,
+      "expected_profit_inr": 15316.32,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    },
+    {
+      "crop": "jute",
+      "confidence": 0.001,
+      "expected_yield_t_per_ha": 2.79,
+      "expected_profit_inr": 63250.5,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    }
+  ]
+}
+
+--- Test instance 3: {'N': 120, 'P': 45, 'K': 20, 'ph': 6.2, 'temperature': 26, 'humidity': 80, 'rainfall': 80, 'land_area_ha': 1.5} ---
+{
+  "best_crop": {
+    "crop": "cotton",
+    "confidence": 0.976,
+    "expected_yield_t_per_ha": 1.55,
+    "expected_profit_inr": 59791.65,
+    "estimate_source": "reference_table_estimate",
+    "harvest_month": "February",
+    "harvest_date_estimate": "2027-02-22"
+  },
+  "alternatives": [
+    {
+      "crop": "maize",
+      "confidence": 0.023,
+      "expected_yield_t_per_ha": 3.88,
+      "expected_profit_inr": 51888.0,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    },
+    {
+      "crop": "jute",
+      "confidence": 0.0,
+      "expected_yield_t_per_ha": 2.79,
+      "expected_profit_inr": 94875.75,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    },
+    {
+      "crop": "mungbean",
+      "confidence": 0.0,
+      "expected_yield_t_per_ha": 0.52,
+      "expected_profit_inr": 22974.48,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    }
+  ]
+}
+
+--- Test instance 4: {'N': 20, 'P': 68, 'K': 20, 'ph': 6.0, 'temperature': 28, 'humidity': 50, 'rainfall': 60, 'land_area_ha': 3.25} ---
+{
+  "best_crop": {
+    "crop": "pigeonpeas",
+    "confidence": 0.841,
+    "expected_yield_t_per_ha": 1.08,
+    "expected_profit_inr": 104253.5,
+    "estimate_source": "reference_table_estimate",
+    "harvest_month": "February",
+    "harvest_date_estimate": "2027-02-22"
+  },
+  "alternatives": [
+    {
+      "crop": "blackgram",
+      "confidence": 0.151,
+      "expected_yield_t_per_ha": 0.65,
+      "expected_profit_inr": 56917.25,
+      "estimate_source": "reference_table_estimate"
+    },
+    {
+      "crop": "maize",
+      "confidence": 0.007,
+      "expected_yield_t_per_ha": 3.88,
+      "expected_profit_inr": 112424.0,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    },
+    {
+      "crop": "chickpea",
+      "confidence": 0.0,
+      "expected_yield_t_per_ha": 1.22,
+      "expected_profit_inr": 86560.5,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    }
+  ]
+}
+
+--- Test instance 5: {'N': 40, 'P': 60, 'K': 80, 'ph': 7.0, 'temperature': 18, 'humidity': 20, 'rainfall': 70, 'land_area_ha': 0.75} ---
+{
+  "best_crop": {
+    "crop": "chickpea",
+    "confidence": 1.0,
+    "expected_yield_t_per_ha": 1.22,
+    "expected_profit_inr": 19975.5,
+    "estimate_source": "reference_table_estimate",
+    "harvest_month": "December",
+    "harvest_date_estimate": "2026-12-24"
+  },
+  "alternatives": [
+    {
+      "crop": "pigeonpeas",
+      "confidence": 0.0,
+      "expected_yield_t_per_ha": 1.08,
+      "expected_profit_inr": 24058.5,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    },
+    {
+      "crop": "jute",
+      "confidence": 0.0,
+      "expected_yield_t_per_ha": 2.79,
+      "expected_profit_inr": 47437.88,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    },
+    {
+      "crop": "blackgram",
+      "confidence": 0.0,
+      "expected_yield_t_per_ha": 0.65,
+      "expected_profit_inr": 13134.75,
+      "estimate_source": "not_plausible_for_profit_ranking"
+    }
+  ]
+}
+
+All 5 test instances returned 1 best crop + 3 alternatives.
+
+Held-out crop classification accuracy: 95.83 % (chance 12.50 %)
+5-fold CV accuracy: 97.12 % +/- 0.64 %
