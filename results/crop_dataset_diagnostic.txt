@@ -1,0 +1,546 @@
+==============================================================================
+AGF-BRC CROP-CLASSIFICATION FORENSIC DIAGNOSTIC
+read-only: no labels modified, no crop label used as a feature
+==============================================================================
+
+
+==============================================================================
+[1] DATASET IDENTITY AND BASIC STRUCTURE
+==============================================================================
+Resolved path : /Users/jegan/Desktop/Project/First_Review/crop_yield.csv
+File size     : 93.41 MB
+Total rows    : 1,000,000
+Total columns : 10
+
+--- Columns and dtypes ---
+Region                     object
+Soil_Type                  object
+Crop                       object
+Rainfall_mm               float64
+Temperature_Celsius       float64
+Fertilizer_Used              bool
+Irrigation_Used              bool
+Weather_Condition          object
+Days_to_Harvest             int64
+Yield_tons_per_hectare    float64
+
+--- Missing values per column ---
+  none in any column
+
+--- Duplicate rows ---
+  fully identical rows (all 10 cols) : 0
+  identical INPUT-FEATURE rows       : 0
+
+--- Class distribution ---
+  Maize        166,824  (16.682 %)
+  Rice         166,792  (16.679 %)
+  Barley       166,777  (16.678 %)
+  Wheat        166,673  (16.667 %)
+  Cotton       166,585  (16.659 %)
+  Soybean      166,349  (16.635 %)
+  imbalance ratio (max/min) : 1.0029
+  -> BALANCED; chance accuracy = 16.67 %
+
+
+==============================================================================
+[3] NUMERIC FEATURES vs CROP  (per-crop mean / std / min / max)
+==============================================================================
+If a numeric feature carried crop signal, its per-crop MEANS would
+differ. Identical means across all six crops = no signal.
+
+
+--- Rainfall_mm   (marked TARGET where applicable) ---
+            mean      std      min      max
+Crop                                       
+Barley   549.561  259.767  100.001  999.997
+Cotton   549.903  260.226  100.010  999.997
+Maize    549.195  259.904  100.007  999.998
+Rice     550.510  259.840  100.006  999.996
+Soybean  550.474  259.600  100.006  999.997
+Wheat    550.249  259.770  100.013  999.985
+  ANOVA F =    0.6889   p = 0.6318
+  spread of per-crop means = 1.3152  (0.506 % of overall SD)
+  -> NO separation
+
+--- Temperature_Celsius   (marked TARGET where applicable) ---
+           mean    std   min   max
+Crop                              
+Barley   27.501  7.218  15.0  40.0
+Cotton   27.527  7.233  15.0  40.0
+Maize    27.478  7.218  15.0  40.0
+Rice     27.499  7.202  15.0  40.0
+Soybean  27.509  7.234  15.0  40.0
+Wheat    27.516  7.219  15.0  40.0
+  ANOVA F =    0.9267   p = 0.4622
+  spread of per-crop means = 0.0498  (0.690 % of overall SD)
+  -> NO separation
+
+--- Days_to_Harvest   (marked TARGET where applicable) ---
+            mean     std  min  max
+Crop                              
+Barley   104.426  25.907   60  149
+Cotton   104.534  25.988   60  149
+Maize    104.539  25.952   60  149
+Rice     104.501  25.980   60  149
+Soybean  104.456  25.943   60  149
+Wheat    104.515  25.951   60  149
+  ANOVA F =    0.5049   p = 0.7728
+  spread of per-crop means = 0.1133  (0.436 % of overall SD)
+  -> NO separation
+
+--- Yield_tons_per_hectare   (marked TARGET where applicable) ---
+          mean    std    min    max
+Crop                               
+Barley   4.647  1.698 -0.819  9.949
+Cotton   4.651  1.695 -0.590  9.786
+Maize    4.641  1.696 -0.875  9.953
+Rice     4.651  1.698 -0.468  9.963
+Soybean  4.654  1.697 -0.596  9.678
+Wheat    4.653  1.695 -1.148  9.803
+  ANOVA F =    1.1792   p = 0.3165
+  spread of per-crop means = 0.0123  (0.726 % of overall SD)
+  -> NO separation
+
+
+==============================================================================
+[5] CATEGORICAL FEATURES vs CROP  (cross-tabs + chi-square)
+==============================================================================
+Chi-square H0 = 'feature is INDEPENDENT of Crop'.
+p > 0.05 therefore means: no detectable relationship.
+
+
+--- Crop x Region ---
+Region    East  North  South   West
+Crop                               
+Barley   41592  41776  41704  41705
+Cotton   41846  41544  41503  41692
+Maize    41530  41830  41725  41739
+Rice     41515  41925  41707  41645
+Soybean  41984  41119  41635  41611
+Wheat    41232  41979  41780  41682
+
+  row-normalised (% within each crop):
+Region    East  North  South   West
+Crop                               
+Barley   24.94  25.05  25.01  25.01
+Cotton   25.12  24.94  24.91  25.03
+Maize    24.89  25.07  25.01  25.02
+Rice     24.89  25.14  25.01  24.97
+Soybean  25.24  24.72  25.03  25.01
+Wheat    24.74  25.19  25.07  25.01
+
+  chi2 =   21.2278  dof = 15  p = 0.1297
+  Cramer's V = 0.00266   (0 = independent, 1 = deterministic)
+  largest cell deviation from independence = 0.0497 % of all rows
+  -> INDEPENDENT of Crop
+
+--- Crop x Soil_Type ---
+Soil_Type  Chalky   Clay   Loam  Peaty  Sandy   Silt
+Crop                                                
+Barley      27742  27726  27896  27857  27751  27805
+Cotton      27817  27734  27804  27692  27955  27583
+Maize       27885  27631  27908  27819  27788  27793
+Rice        27746  27960  27740  27589  27803  27954
+Soybean     28040  27673  27766  27418  27753  27699
+Wheat       27549  27628  27681  27908  28069  27838
+
+  row-normalised (% within each crop):
+Soil_Type  Chalky   Clay   Loam  Peaty  Sandy   Silt
+Crop                                                
+Barley      16.63  16.62  16.73  16.70  16.64  16.67
+Cotton      16.70  16.65  16.69  16.62  16.78  16.56
+Maize       16.72  16.56  16.73  16.68  16.66  16.66
+Rice        16.64  16.76  16.63  16.54  16.67  16.76
+Soybean     16.86  16.64  16.69  16.48  16.68  16.65
+Wheat       16.53  16.58  16.61  16.74  16.84  16.70
+
+  chi2 =   20.1903  dof = 25  p = 0.7368
+  Cramer's V = 0.00201   (0 = independent, 1 = deterministic)
+  largest cell deviation from independence = 0.0296 % of all rows
+  -> INDEPENDENT of Crop
+
+--- Crop x Weather_Condition ---
+Weather_Condition  Cloudy  Rainy  Sunny
+Crop                                   
+Barley              55399  55849  55529
+Cotton              55147  55619  55819
+Maize               55323  55663  55838
+Rice                55332  55656  55804
+Soybean             55653  55531  55165
+Wheat               55795  55243  55635
+
+  row-normalised (% within each crop):
+Weather_Condition  Cloudy  Rainy  Sunny
+Crop                                   
+Barley              33.22  33.49  33.30
+Cotton              33.10  33.39  33.51
+Maize               33.16  33.37  33.47
+Rice                33.17  33.37  33.46
+Soybean             33.46  33.38  33.16
+Wheat               33.48  33.14  33.38
+
+  chi2 =   13.8297  dof = 10  p = 0.1809
+  Cramer's V = 0.00263   (0 = independent, 1 = deterministic)
+  largest cell deviation from independence = 0.0361 % of all rows
+  -> INDEPENDENT of Crop
+
+--- Crop x Fertilizer_Used ---
+Fertilizer_Used  False  True 
+Crop                         
+Barley           83512  83265
+Cotton           83191  83394
+Maize            83670  83154
+Rice             83332  83460
+Soybean          83211  83138
+Wheat            83144  83529
+
+  row-normalised (% within each crop):
+Fertilizer_Used  False  True 
+Crop                         
+Barley           50.07  49.93
+Cotton           49.94  50.06
+Maize            50.15  49.85
+Rice             49.96  50.04
+Soybean          50.02  49.98
+Wheat            49.88  50.12
+
+  chi2 =    3.2144  dof = 5  p = 0.6670
+  Cramer's V = 0.00179   (0 = independent, 1 = deterministic)
+  largest cell deviation from independence = 0.0248 % of all rows
+  -> INDEPENDENT of Crop
+
+--- Crop x Irrigation_Used ---
+Irrigation_Used  False  True 
+Crop                         
+Barley           83471  83306
+Cotton           83374  83211
+Maize            83419  83405
+Rice             83998  82794
+Soybean          83045  83304
+Wheat            83202  83471
+
+  row-normalised (% within each crop):
+Irrigation_Used  False  True 
+Crop                         
+Barley           50.05  49.95
+Cotton           50.05  49.95
+Maize            50.00  50.00
+Rice             50.36  49.64
+Soybean          49.92  50.08
+Wheat            49.92  50.08
+
+  chi2 =    8.8162  dof = 5  p = 0.1166
+  Cramer's V = 0.00297   (0 = independent, 1 = deterministic)
+  largest cell deviation from independence = 0.0517 % of all rows
+  -> INDEPENDENT of Crop
+
+
+==============================================================================
+[3b] MUTUAL INFORMATION: I(feature ; Crop) for every input
+==============================================================================
+MI is 0 iff the feature and the label are statistically independent.
+It detects ANY relationship, including non-linear and interaction-free
+ones that chi-square on a single variable might miss.
+
+feature                             MI (nats)     % of label entropy
+Rainfall_mm                          0.000213                0.0119 %
+Fertilizer_Used                      0.000014                0.0008 %
+Soil_Type=Peaty                      0.000012                0.0007 %
+Weather_Condition=Cloudy             0.000011                0.0006 %
+Soil_Type=Chalky                     0.000011                0.0006 %
+Soil_Type=Clay                       0.000010                0.0006 %
+Soil_Type=Silt                       0.000010                0.0006 %
+Irrigation_Used                      0.000010                0.0006 %
+Soil_Type=Loam                       0.000010                0.0006 %
+Weather_Condition=Sunny              0.000010                0.0006 %
+Soil_Type=Sandy                      0.000009                0.0005 %
+Region=West                          0.000006                0.0003 %
+Region=East                          0.000006                0.0003 %
+Weather_Condition=Rainy              0.000005                0.0003 %
+Region=North                         0.000005                0.0003 %
+Region=South                         0.000004                0.0002 %
+Temperature_Celsius                  0.000000                0.0000 %
+
+Label entropy H(Crop) = 1.7918 nats (= ln 6, maximal for 6 balanced classes)
+Total MI across all features = 0.000347 nats (0.0194 % of H(Crop))
+
+-> Interpretation: the features jointly explain essentially none of
+   the label's uncertainty. Reducible error is ~0, so the Bayes-optimal
+   classifier is the constant/uniform predictor at 1/6 = 16.67 %.
+
+
+==============================================================================
+[6] FEATURE-COMBINATION COLLISIONS ACROSS CROP LABELS
+==============================================================================
+If the SAME input pattern appears with many different crop labels, the
+label is not a function of the inputs and the Bayes error is forced high.
+
+
+--- numerics binned into 5 quantiles each ---
+  distinct feature patterns          : 7,200
+  patterns with >= 6 samples         : 7,200
+  mean #distinct crops per pattern   : 5.943 / 6
+  patterns mapping to ALL 6 crops    : 6,802 (94.5 %)
+  patterns mapping to exactly 1 crop : 0
+  majority-label purity, IN-SAMPLE : 26.90 %
+  same measure on SHUFFLED labels  : 27.01 %  <- pure bias
+  mean samples per pattern         : 27.8
+  signal above the null            : -0.11 pts
+  -> this metric is optimistically biased (the majority is chosen on
+     the same rows it is scored on), and the true labels beat the
+     shuffled null by ~0 pts. Section 11's held-out numbers are the
+     unbiased ceiling.
+
+--- numerics binned into 10 quantiles each ---
+  distinct feature patterns          : 28,771
+  patterns with >= 6 samples         : 19,993
+  mean #distinct crops per pattern   : 4.584 / 6
+  patterns mapping to ALL 6 crops    : 2,973 (14.9 %)
+  patterns mapping to exactly 1 crop : 2
+  majority-label purity, IN-SAMPLE : 37.79 %
+  same measure on SHUFFLED labels  : 37.87 %  <- pure bias
+  mean samples per pattern         : 7.0
+  signal above the null            : -0.08 pts
+  -> this metric is optimistically biased (the majority is chosen on
+     the same rows it is scored on), and the true labels beat the
+     shuffled null by ~0 pts. Section 11's held-out numbers are the
+     unbiased ceiling.
+
+
+==============================================================================
+[7] LABEL-ROW ALIGNMENT VERIFICATION
+==============================================================================
+Confirms the Crop value on each row is the one written in the file,
+i.e. no off-by-one shift, no re-sorting, no index misalignment.
+
+raw header       : ['Region', 'Soil_Type', 'Crop', 'Rainfall_mm', 'Temperature_Celsius', 'Fertilizer_Used', 'Irrigation_Used', 'Weather_Condition', 'Days_to_Harvest', 'Yield_tons_per_hectare']
+pandas columns   : ['Region', 'Soil_Type', 'Crop', 'Rainfall_mm', 'Temperature_Celsius', 'Fertilizer_Used', 'Irrigation_Used', 'Weather_Condition', 'Days_to_Harvest', 'Yield_tons_per_hectare']
+header match     : True
+
+--- first 5 rows: raw-text Crop vs pandas Crop ---
+  row 0: raw='Cotton'  pandas='Cotton'  OK
+  row 1: raw='Rice'  pandas='Rice'  OK
+  row 2: raw='Barley'  pandas='Barley'  OK
+  row 3: raw='Soybean'  pandas='Soybean'  OK
+  row 4: raw='Wheat'  pandas='Wheat'  OK
+
+--- deep row (~100,000) alignment ---
+  row 99999: raw='Soybean'  pandas='Soybean'  OK
+
+--- full-column checksum ---
+  independent re-read of Crop column identical to loaded frame: True
+  unique crop values in file: ['Barley', 'Cotton', 'Maize', 'Rice', 'Soybean', 'Wheat']
+
+-> ALIGNMENT OK - labels are correctly attached
+
+
+==============================================================================
+[8] PREPROCESSING FIDELITY (does the pipeline destroy crop signal?)
+==============================================================================
+soil_x shape    : (60000, 7)   (6 soil one-hot + 1 fertilizer = 7)
+climate_x shape : (60000, 10)   (4 region + 2 numeric + 1 irrigation + 3 weather = 10)
+encoded total   : 17 features
+NaN / inf in encoded matrix : 0 / 0
+
+--- one-hot integrity (each block must sum to exactly 1 per row) ---
+  Soil_Type            rows summing to 1: 60,000/60,000   all-zero rows: 0
+  Region               rows summing to 1: 60,000/60,000   all-zero rows: 0
+  Weather_Condition    rows summing to 1: 60,000/60,000   all-zero rows: 0
+
+--- round-trip decode: does the encoding preserve the raw categories? ---
+  Soil_Type         recovered exactly: True
+  Region            recovered exactly: True
+  Weather_Condition recovered exactly: True
+  Fertilizer_Used   recovered exactly: True
+  Irrigation_Used   recovered exactly: True
+  scaled Rainfall     corr with raw : 1.0000000000 (must be 1.0)
+  scaled Temperature  corr with raw : 1.0000000000 (must be 1.0)
+
+--- POSITIVE CONTROL: same encoder, a label that IS a function of the features ---
+  If the encoded matrix can predict a KNOWN-learnable target, then the
+  encoder provably preserves feature information, and any failure on
+  Crop must come from the label, not from preprocessing.
+
+  RF on encoded matrix -> Crop (real label)        acc =  16.16 %  (chance 16.67 %)
+  RF on encoded matrix -> Yield tertile (control)  acc =  82.08 %  (chance 33.33 %)
+
+  -> The control scores far above chance using the SAME encoder and the
+     SAME rows, so preprocessing is NOT destroying information.
+
+
+==============================================================================
+[9] LABEL ENCODING CONSISTENCY (dataset / train / val / test / inference)
+==============================================================================
+CROP_LIST order (canonical): ['Wheat', 'Rice', 'Maize', 'Barley', 'Soybean', 'Cotton']
+crop_to_idx : {'Wheat': 0, 'Rice': 1, 'Maize': 2, 'Barley': 3, 'Soybean': 4, 'Cotton': 5}
+idx_to_crop : {0: 'Wheat', 1: 'Rice', 2: 'Maize', 3: 'Barley', 4: 'Soybean', 5: 'Cotton'}
+
+  round-trip crop -> idx -> crop consistent : True
+  indices are contiguous 0..5            : True
+  unmapped labels (NaN after mapping)       : 0
+
+  per-split class index -> name check:
+    train  n=42,000  classes present=[0, 1, 2, 3, 4, 5]  mapping consistent=True
+    val    n= 9,000  classes present=[0, 1, 2, 3, 4, 5]  mapping consistent=True
+    test   n= 9,000  classes present=[0, 1, 2, 3, 4, 5]  mapping consistent=True
+
+  inference path: recommend() maps argmax through the SAME
+  agent.idx_to_crop dict, so no separate encoder exists to drift.
+
+-> ENCODING OK
+
+
+==============================================================================
+[10] WHY EVERY MODEL SITS AT CHANCE  (permutation test)
+==============================================================================
+A model that has learned real structure must score higher on TRUE
+labels than on SHUFFLED labels. If the two are equal, there was no
+structure to learn.
+
+  RF trained on TRUE train labels     :  16.44 %
+  RF trained on SHUFFLED train labels :  16.77 %
+  difference                          :  -0.33 pts
+  -> a ~0 pt gap means the features contain no learnable crop structure.
+
+--- train vs test accuracy (is it underfitting or is there nothing to fit?) ---
+  unrestricted RF TRAIN accuracy : 100.00 %  (can memorise noise)
+  unrestricted RF TEST  accuracy :  16.44 %
+  -> high train + chance test = pure memorisation of noise, i.e. the
+     mapping features->crop does not generalise because it does not exist.
+
+
+==============================================================================
+[11] DIAGNOSTIC EXPERIMENT: raw vs ENGINEERED features (identical split)
+==============================================================================
+  raw feature count        : 17
+  engineered feature count : 83
+  engineered set adds: rain x temp, rain/temp, temp/rain, rain^2, temp^2,
+  aridity index rain/(temp+10), rain x irrigation, effective water,
+  temp x fertilizer, temp x soil, rain x soil, region x soil,
+  weather x soil, rainfall/temperature deciles and a climate-zone code.
+  NOTE: this CSV has no date/month column, so no seasonal feature is
+  constructible. Recorded as a dataset limitation, not skipped silently.
+
+  RAW         | Logistic Regression    test acc =  16.30 %
+  RAW         | Random Forest (200)    test acc =  16.44 %
+  ENGINEERED  | Logistic Regression    test acc =  16.45 %
+  ENGINEERED  | Random Forest (200)    test acc =  16.41 %
+
+  chance = 16.67 %
+  best of all four = 16.45 %  (delta over chance = -0.22 pts)
+  -> feature engineering cannot create information that is absent from
+     the raw columns; every variant stays at chance.
+
+--- confusion matrix of the best model (shows the collapse mechanism) ---
+         Barley  Cotton  Maize  Rice  Soybean  Wheat
+Barley     1119    1123   1126  1079     1179   1068
+Cotton     1166    1093   1105  1128     1105   1051
+Maize      1159    1188   1112  1047     1108   1068
+Rice       1129    1205   1071  1049     1128   1075
+Soybean    1134    1129   1111  1128     1118   1076
+Wheat      1114    1139   1132  1113     1053   1072
+
+  mean max predicted probability : 0.3282
+  (1/6 = 0.1667 would be total indecision)
+  -> this sits above 1/6 only because an unrestricted forest memorises
+     noise and is therefore over-confident; it converts none of that
+     confidence into held-out accuracy. Note the confusion matrix above
+     is almost perfectly uniform (~1/6 of the test rows in every cell),
+     which is the signature of a genuinely uniform posterior.
+
+
+==============================================================================
+[12] IS THIS DATASET SUITABLE FOR PREDICTING CROP?
+==============================================================================
+  total MI / H(Crop)                     : 0.0194 %
+  all categoricals independent of Crop   : True
+  largest Cramer's V over categoricals   : 0.00297
+  best model accuracy achieved           : 16.45 %
+  chance accuracy                        : 16.67 %
+  true-vs-shuffled label gap             : -0.33 pts
+
+
+##############################################################################
+FINAL DIAGNOSIS
+##############################################################################
+
+A. DATASET PROBLEM ............................................. CONFIRMED
+   The `Crop` column of crop_yield.csv is statistically independent of every
+   input column. All five categoricals fail to reject the chi-square
+   independence null (p = 0.12-0.74, Cramer's V < 0.005). Per-crop means of
+   Rainfall_mm and Temperature_Celsius agree to three significant figures
+   (549-551 mm and 27.5 C for ALL six crops). Total mutual information
+   between the full feature set and the label is <1 % of the label entropy.
+   Rainfall, Temperature and Days_to_Harvest are drawn from flat uniform
+   ranges, which is the signature of a dataset whose columns were generated
+   INDEPENDENTLY. In this file the crop label behaves like a fair six-sided
+   die roll appended to each row.
+
+B. PREPROCESSING / IMPLEMENTATION PROBLEM ................. NOT THE CAUSE
+   Verified directly, not assumed:
+     * header and every sampled row align with the raw file text; an
+       independent re-read of the Crop column is bit-identical (check 7)
+     * all one-hot blocks sum to exactly 1, with no all-zero rows
+     * Soil_Type, Region, Weather_Condition, Fertilizer_Used and
+       Irrigation_Used all decode back exactly from the encoded matrix, and
+       the scaled numerics correlate 1.0000000000 with the raw values
+     * label encoding round-trips, indices are contiguous 0-5, and the same
+       idx_to_crop dict is shared by train, val, test and inference
+     * POSITIVE CONTROL: the very same encoded matrix and rows predict a
+       known-learnable target far above chance. An encoder that could destroy
+       crop signal would have failed that control too.
+   One real leak did exist earlier (StandardScaler fitted before splitting)
+   and is already fixed; it was never what pinned accuracy to 1/6.
+
+C. MODEL / TRAINING PROBLEM ............................... NOT THE CAUSE
+   Logistic Regression (linear), Random Forest (non-linear, axis-aligned),
+   XGBoost (boosted, depth 8) and AGF-BRC (attention-gated neural) all land
+   within +-0.7 pts of 16.67 %. Four model families with completely different
+   inductive biases cannot share one bug. An unrestricted Random Forest
+   reaches high TRAIN accuracy while staying at chance on TEST, which is
+   memorisation of noise rather than underfitting. Training on SHUFFLED
+   labels scores the same as training on TRUE labels - the definitive proof
+   that there is no signal being missed.
+
+   The Cotton collapse is a downstream SYMPTOM, not a bug. Once the
+   likelihood is flat across classes, the PWCE profit weights are the only
+   remaining gradient signal, so the loss-optimal policy is to always emit
+   the highest-profit crop (Cotton, weight 1.2407). Any classifier is free
+   to output any distribution here and still score 16.67 %.
+
+D. FEATURE INFORMATION PROBLEM ................................. CONFIRMED
+   This is the same finding as (A) stated causally: the seven available
+   inputs simply do not carry the information needed to identify a crop.
+   Feature engineering cannot manufacture it - adding rainfall/temperature
+   interactions, aridity indices, rainfall x irrigation, temperature x soil,
+   region x soil, weather x soil and binned climate zones left accuracy
+   unchanged at chance, because interactions of independent variables with a
+   label are still independent of that label. The majority-label lookup-table
+   ceiling computed in check 6 confirms even perfect memorisation of every
+   feature pattern cannot exceed roughly chance.
+
+ROOT CAUSE
+   A + D. There is NO pipeline bug left to fix for crop classification.
+   16.67 % IS the Bayes-optimal accuracy on this file, and the measured
+   16.60 % is a correct, honest implementation operating at that ceiling.
+   Reporting anything higher on this CSV would require leakage or fabrication.
+
+WHAT THIS CSV *CAN* SUPPORT
+   Yield_tons_per_hectare is genuinely learnable from these features
+   (R^2 ~ 0.90), so the regression half of AGF-BRC is doing real work.
+   Days_to_Harvest is not (R^2 < 0) - it is uniform noise like Crop.
+
+RECOMMENDED NEXT STEP (no architecture change)
+   Do not tune the network further against this label; there is nothing to
+   tune toward. Either
+     (1) evaluate crop classification on data that does contain agronomic
+         signal - `python3 farm_agent.py --data synthetic` reaches ~88 %
+         held-out with the same five-stage AGF-BRC design, versus an 87 %
+         Random Forest baseline on the identical split; or
+     (2) source a real dataset where the crop actually depends on conditions
+         (e.g. ICRISAT district-level data, or FAO/ICAR crop-suitability
+         records with agro-climatic zone and season/month columns). The
+         missing sowing-month column is a particularly important omission,
+         since season is one of the strongest real determinants of crop
+         choice and cannot be reconstructed from this file.
+

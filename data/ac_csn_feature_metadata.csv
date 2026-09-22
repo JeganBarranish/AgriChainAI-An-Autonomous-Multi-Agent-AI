@@ -1,0 +1,22 @@
+feature_name,meaning,source_dataset,calculation,unit,model_input
+storage_day,Elapsed days since first sensor date (Day 0),20241118 DataLog.csv,(date - first_date).days,days,yes
+Rep,Paneer replicate number within a storage day,20241230 Testing Data.xlsx,as recorded,-,no (grouping metadata only)
+mean_temperature,Daily mean storage temperature,20241118 DataLog.csv,mean(Temperature),degC,yes
+min_temperature,Daily minimum temperature,20241118 DataLog.csv,min(Temperature),degC,yes
+max_temperature,Daily maximum temperature,20241118 DataLog.csv,max(Temperature),degC,yes
+temperature_std,Daily temperature standard deviation,20241118 DataLog.csv,std(Temperature),degC,yes
+temperature_range,Daily temperature spread,20241118 DataLog.csv,max - min,degC,yes
+temperature_excursion_count,Readings above safe threshold,20241118 DataLog.csv,count(Temperature > 4.0),readings,yes
+time_above_safe_threshold_ratio,Fraction of day above safe threshold,20241118 DataLog.csv,mean(Temperature > 4.0),fraction 0-1,yes
+mean_rh,Daily mean relative humidity,20241118 DataLog.csv,mean(RH),%RH,yes
+min_rh,Daily minimum RH,20241118 DataLog.csv,min(RH),%RH,yes
+max_rh,Daily maximum RH,20241118 DataLog.csv,max(RH),%RH,yes
+rh_std,Daily RH standard deviation,20241118 DataLog.csv,std(RH),%RH,yes
+rh_range,Daily RH spread,20241118 DataLog.csv,max - min,%RH,yes
+compressor_on_ratio,Share of readings with compressor ON,20241118 DataLog.csv,count(Compressor==1)/total * 100,percent 0-100,yes
+compressor_cycle_count,Compressor OFF->ON transitions per day,20241118 DataLog.csv,count(diff(Compressor)==1),cycles,yes
+fridge_open_count,Door-open readings per day,20241118 DataLog.csv,count(Fridge_Open==1),readings,yes
+fridge_open_ratio,Share of readings with door open,20241118 DataLog.csv,count(Fridge_Open==1)/total * 100,percent 0-100,yes
+n_sensor_readings,Sensor readings aggregated for the day,20241118 DataLog.csv,count,readings,no (audit metadata only)
+spoilage_class,Target: 0=FRESH 1=WARNING 2=SPOILED,20241230 Testing Data.xlsx,existing validated method (TPC log10 + overall acceptability),-,no (TARGET)
+spoilage_status,Target label text,20241230 Testing Data.xlsx,class name mapping,-,no (TARGET)

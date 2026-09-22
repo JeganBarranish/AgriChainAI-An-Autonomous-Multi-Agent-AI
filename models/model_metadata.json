@@ -1,0 +1,80 @@
+{
+  "training_date": "2026-09-10T06:35:56.438384+00:00",
+  "products": {
+    "paneer": {
+      "model_path": "/Users/jegan/Desktop/Project/First_Review/models/paneer_ac_csn.keras",
+      "preprocessor_path": "/Users/jegan/Desktop/Project/First_Review/models/paneer_preprocessor.pkl",
+      "features": "17 cold-chain daily aggregates (see spoilage_preprocessing.FEATURE_COLUMNS)",
+      "target_definition": "results/target_definition.json",
+      "best_model": "XGBoost",
+      "metrics": {
+        "accuracy": 1.0,
+        "precision_macro": 1.0,
+        "recall_macro": 1.0,
+        "f1_macro": 1.0,
+        "f1_weighted": 1.0,
+        "fresh_recall": 1.0,
+        "warning_recall": 1.0,
+        "spoiled_recall": 1.0
+      }
+    },
+    "dryfruit": {
+      "model_path": "/Users/jegan/Desktop/Project/First_Review/models/dryfruit_ac_csn.keras",
+      "preprocessor_path": "/Users/jegan/Desktop/Project/First_Review/models/dryfruit_preprocessor.pkl",
+      "inference_features": [
+        "storage_duration_days",
+        "storage_months",
+        "packaging_None",
+        "packaging_HDPE",
+        "packaging_LDPE",
+        "dryer_type_CMD",
+        "dryer_type_TD",
+        "fruit_Mango",
+        "fruit_Pineapple"
+      ],
+      "inference_user_inputs": [
+        "product_subtype (Mango/Pineapple)",
+        "storage_duration_days",
+        "dryer_type (CMD/TD)",
+        "packaging (None/HDPE/LDPE)"
+      ],
+      "not_available_in_source": [
+        "temperature",
+        "humidity"
+      ],
+      "target_definition": "dataset/reports/target_definition.md",
+      "best_model": "XGBoost",
+      "metrics": {
+        "accuracy": 1.0,
+        "precision_macro": 1.0,
+        "recall_macro": 1.0,
+        "f1_macro": 1.0,
+        "f1_weighted": 1.0,
+        "spoiled_recall": 1.0,
+        "confusion_matrix": [
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            2
+          ]
+        ]
+      }
+    }
+  },
+  "class_mapping": {
+    "FRESH": 0,
+    "WARNING": 1,
+    "SPOILED": 2
+  },
+  "unified_dataset": "/Users/jegan/Desktop/Project/First_Review/dataset/ac_csn_multiproduct.csv"
+}

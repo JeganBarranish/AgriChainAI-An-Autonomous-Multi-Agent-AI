@@ -1,0 +1,186 @@
+========================================================================
+DRY FRUIT DATA PROFILE — Mendeley Dataset
+Dataset on Physicochemical Properties, Microbiological Quality
+and Shelf Life Prediction of Solar Dried Mangoes and Pineapples
+========================================================================
+
+FILE: S 1. Mango and Pineaplle Physicochemical Charcteristics Data.xlsx
+Exists: True
+Sheets: ['MANGO', 'PINEAPPLE', 'COMBINED (MANGO AND PINEAPPLE)']
+
+  Sheet: MANGO
+  Rows: 9 | Cols: 7
+  Columns: ['SN', 'Fruit', 'Drying method', 'Moisture Content (g/100 g WB', 'Water Activity (Aw)', 'pH', 'TTA (g of ca/100 g DM)']
+  Dtypes:
+SN                                int64
+Fruit                            object
+Drying method                    object
+Moisture Content (g/100 g WB    float64
+Water Activity (Aw)             float64
+pH                              float64
+TTA (g of ca/100 g DM)          float64
+  Missing %:
+SN                              0.0
+Fruit                           0.0
+Drying method                   0.0
+Moisture Content (g/100 g WB    0.0
+Water Activity (Aw)             0.0
+pH                              0.0
+TTA (g of ca/100 g DM)          0.0
+  SN: min=1, max=9, mean=5
+  Moisture Content (g/100 g WB: min=13.35, max=79.19, mean=36.34
+  Water Activity (Aw): min=0.44, max=0.99, mean=0.6378
+  pH: min=3.45, max=4, mean=3.71
+  TTA (g of ca/100 g DM): min=0.61, max=0.93, mean=0.7956
+  Fruit unique (1): ['Mango']
+  Drying method unique (3): ['Fresh', 'cabinet mixed-mode dryer (CMD)', 'Tunnel dryer (TD)']
+
+  Sheet: PINEAPPLE
+  Rows: 9 | Cols: 7
+  Columns: ['SN', 'Fruit', 'Drying method', 'Moisture Content (g/100 g WB', 'Water Activity (Aw)', 'pH', 'TTA (g of ca/100 g DM)']
+  Dtypes:
+SN                                int64
+Fruit                            object
+Drying method                    object
+Moisture Content (g/100 g WB    float64
+Water Activity (Aw)             float64
+pH                              float64
+TTA (g of ca/100 g DM)          float64
+  Missing %:
+SN                              0.0
+Fruit                           0.0
+Drying method                   0.0
+Moisture Content (g/100 g WB    0.0
+Water Activity (Aw)             0.0
+pH                              0.0
+TTA (g of ca/100 g DM)          0.0
+  SN: min=1, max=9, mean=5
+  Moisture Content (g/100 g WB: min=14.7, max=81.07, mean=38.2
+  Water Activity (Aw): min=0.46, max=0.999, mean=0.6652
+  pH: min=3.39, max=3.89, mean=3.584
+  TTA (g of ca/100 g DM): min=0.63, max=1.21, mean=0.9056
+  Fruit unique (1): ['Pineapple']
+  Drying method unique (3): ['Fresh', 'Cabinet mixed-mode dryer (CMD)', 'Tunnel dryer (TD)']
+
+  Sheet: COMBINED (MANGO AND PINEAPPLE)
+  Rows: 18 | Cols: 7
+  Columns: ['SN', 'Fruit', 'Drying method', 'Moisture Content (g/100 g WB', 'Water Activity (Aw)', 'pH', 'TTA (g of ca/100 g DM)']
+  Dtypes:
+SN                                int64
+Fruit                            object
+Drying method                    object
+Moisture Content (g/100 g WB    float64
+Water Activity (Aw)             float64
+pH                              float64
+TTA (g of ca/100 g DM)          float64
+  Missing %:
+SN                              0.0
+Fruit                           0.0
+Drying method                   0.0
+Moisture Content (g/100 g WB    0.0
+Water Activity (Aw)             0.0
+pH                              0.0
+TTA (g of ca/100 g DM)          0.0
+  SN: min=1, max=18, mean=9.5
+  Moisture Content (g/100 g WB: min=13.35, max=81.07, mean=37.27
+  Water Activity (Aw): min=0.44, max=0.999, mean=0.6515
+  pH: min=3.39, max=4, mean=3.647
+  TTA (g of ca/100 g DM): min=0.61, max=1.21, mean=0.8506
+  Fruit unique (2): ['Mango', 'Pineapple']
+  Drying method unique (4): ['Fresh', 'cabinet mixed-mode dryer (CMD)', 'Tunnel dryer (TD)', 'Cabinet mixed-mode dryer (CMD)']
+
+FILE: S 2. Mango and Pinepple Microbial Data.xlsx
+Exists: True
+Sheets: ['MANGO', 'PINEAPPLES', 'COMBINED (MANGO&PINEAPPLE)']
+
+  Sheet: MANGO
+  Rows: 45 | Cols: 7
+  Columns: ['SN', 'Fruit ', 'Microrganism', 'Dryer type', 'Time (Months)', 'Packaging material', 'Microbial load (CFU/g)']
+  Dtypes:
+SN                         int64
+Fruit                     object
+Microrganism              object
+Dryer type                object
+Time (Months)             object
+Packaging material        object
+Microbial load (CFU/g)    object
+  Missing %:
+SN                        0.0
+Fruit                     0.0
+Microrganism              0.0
+Dryer type                0.0
+Time (Months)             0.0
+Packaging material        0.0
+Microbial load (CFU/g)    0.0
+  SN: min=1, max=45, mean=23
+  Fruit  unique (1): ['Mango']
+  Microrganism unique (3): ['Total Plate Count', 'Fungi', 'Coliform']
+  Dryer type unique (3): ['Fresh', 'Mixed', 'Tunel']
+  Time (Months) unique (3): ['Zero', 'Three', 'Six']
+  Packaging material unique (3): ['No', 'High Density', 'Low Density']
+  Microbial load (CFU/g) unique (31): ['13923', '10416', '12973', '7310', '8930', '8100', '10620', '10710', '14400', '3250', '3970', '3870', '4410', '4590', '7560', '4972', '4373', '4697', '1800', '3600']
+
+  Sheet: PINEAPPLES
+  Rows: 45 | Cols: 7
+  Columns: ['SN', 'Fruit ', 'Microrganism', 'Dryer type', 'Time (Months)', 'Packaging material', 'Microbial load (CFU/g)']
+  Dtypes:
+SN                         int64
+Fruit                     object
+Microrganism              object
+Dryer type                object
+Time (Months)             object
+Packaging material        object
+Microbial load (CFU/g)    object
+  Missing %:
+SN                        0.0
+Fruit                     0.0
+Microrganism              0.0
+Dryer type                0.0
+Time (Months)             0.0
+Packaging material        0.0
+Microbial load (CFU/g)    0.0
+  SN: min=1, max=45, mean=23
+  Fruit  unique (1): ['Pineapple']
+  Microrganism unique (3): ['Total Plate Count', 'Fungi', 'Coliform']
+  Dryer type unique (3): ['Fresh', 'Mixed', 'Tunnel']
+  Time (Months) unique (3): ['Zero', 'Three', 'Six']
+  Packaging material unique (3): ['No', 'High Density', 'Low Density']
+  Microbial load (CFU/g) unique (30): ['15923', '15506', '14993', '5805', '9810', '8370', '11475', '11250', '13770', '1935', '3195', '4140', '5850', '6525', '8730', '5512', '4981', '6997', '3060', '5040']
+
+  Sheet: COMBINED (MANGO&PINEAPPLE)
+  Rows: 90 | Cols: 7
+  Columns: ['SN', 'Fruit ', 'Microrganism', 'Dryer type', 'Time (Months)', 'Packaging material', 'Microbial load (CFU/g)']
+  Dtypes:
+SN                         int64
+Fruit                     object
+Microrganism              object
+Dryer type                object
+Time (Months)             object
+Packaging material        object
+Microbial load (CFU/g)    object
+  Missing %:
+SN                        0.0
+Fruit                     0.0
+Microrganism              0.0
+Dryer type                0.0
+Time (Months)             0.0
+Packaging material        0.0
+Microbial load (CFU/g)    0.0
+  SN: min=1, max=90, mean=45.5
+  Fruit  unique (2): ['Mango', 'Pineapple']
+  Microrganism unique (3): ['Total Plate Count', 'Fungi', 'Coliform']
+  Dryer type unique (4): ['Fresh', 'Mixed', 'Tunel', 'Tunnel']
+  Time (Months) unique (3): ['Zero', 'Three', 'Six']
+  Packaging material unique (3): ['No', 'High Density', 'Low Density']
+  Microbial load (CFU/g) unique (59): ['13923', '10416', '12973', '7310', '8930', '8100', '10620', '10710', '14400', '3250', '3970', '3870', '4410', '4590', '7560', '4972', '4373', '4697', '1800', '3600']
+
+========================================================================
+KEY FINDINGS
+========================================================================
+- NO temperature or relative humidity columns exist in any file.
+- Physicochemical: Moisture, Water Activity (Aw), pH, TTA by drying method.
+- Microbial: TPC, Fungi, Coliform by dryer, packaging, storage time.
+- Storage time levels: Zero (0), Three (3), Six (6) months.
+- Dryer types: Fresh (raw fruit), Mixed/CMD, Tunel/Tunnel.
+- Packaging: No, High Density, Low Density.
+- Coliform mostly absent/zero for dried samples.
