@@ -1,0 +1,15 @@
+{
+  "best_model": "XGBoost",
+  "ac_csn_path": "/Users/jegan/Desktop/Project/First_Review/models/ac_csn_spoilage_model.keras",
+  "best_baseline_path": "/Users/jegan/Desktop/Project/First_Review/models/best_spoilage_model.pkl",
+  "metrics": {
+    "accuracy": 1.0,
+    "precision_macro": 1.0,
+    "recall_macro": 1.0,
+    "f1_macro": 1.0,
+    "f1_weighted": 1.0,
+    "fresh_recall": 1.0,
+    "warning_recall": 1.0,
+    "spoiled_recall": 1.0
+  }
+}

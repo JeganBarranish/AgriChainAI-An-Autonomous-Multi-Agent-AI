@@ -1,0 +1,53 @@
+{
+  "classes": [
+    "FRESH",
+    "WARNING",
+    "SPOILED"
+  ],
+  "class_encoding": {
+    "FRESH": 0,
+    "WARNING": 1,
+    "SPOILED": 2
+  },
+  "methodology": "Three-class spoilage labels derived from real Paneer quality measurements. Total Plate Count (TPC, log10 cfu/ml) is the primary microbiological indicator of microbial deterioration. Overall Acceptability (9-point hedonic scale) provides secondary sensory confirmation when available.",
+  "thresholds": {
+    "fresh_tpc_log10_max": {
+      "value": 3.5,
+      "rationale": "TPC log10 < 3.5 corresponds to early storage (Days 0\u20132) where mean TPC remained below 2.8 and sensory acceptability exceeded 8.3 in the experimental dataset, consistent with satisfactory microbiological quality for fresh paneer."
+    },
+    "spoiled_tpc_log10_min": {
+      "value": 4.5,
+      "rationale": "TPC log10 >= 4.5 aligns with marked microbial proliferation observed from Day 8 onward (mean TPC >= 4.49) and declining sensory scores, consistent with ICMSF/food-microbiology spoilage thresholds for refrigerated dairy products."
+    },
+    "fresh_acceptability_min": {
+      "value": 7.5,
+      "rationale": "Overall acceptability >= 7.5 represents the lower bound of fresh-product sensory scores observed during Days 0\u20133 (mean >= 8.0)."
+    },
+    "spoiled_acceptability_max": {
+      "value": 6.0,
+      "rationale": "Overall acceptability <= 6.0 corresponds to sensory rejection threshold observed from Day 7 onward when panellists rated samples below acceptable freshness."
+    },
+    "safe_temperature_c": {
+      "value": 4.0,
+      "rationale": "4 \u00b0C is the standard cold-chain upper limit for refrigerated dairy products (including paneer) per FSSAI/industry cold-chain guidelines."
+    }
+  },
+  "source_columns_for_target": [
+    "tpc_log10 (Total Plate Count, log10 cfu/ml)",
+    "overall_acceptability (9-point hedonic scale, when available)"
+  ],
+  "fallback_when_sensory_missing": "Days 10\u201313 lack individual replicate sensory scores in the source Excel file. For those samples, TPC-only rules apply.",
+  "leakage_prevention": "Target source columns (TPC, sensory, pH, moisture) are excluded from model input features. The model predicts spoilage from cold-chain sensor aggregates only.",
+  "limitations": [
+    "Small sample size (65 replicates across 14 storage days).",
+    "Single experimental batch \u2014 generalization beyond this study is not claimed.",
+    "Thresholds are configurable via TARGET_CONFIG and should be validated with domain experts before production deployment.",
+    "No explicit study documentation was bundled with the dataset; thresholds are justified from observed data trends and standard food-microbiology practice."
+  ],
+  "observed_class_distribution": {
+    "SPOILED": 30,
+    "FRESH": 25,
+    "WARNING": 15
+  },
+  "total_samples": 70
+}
