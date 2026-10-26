@@ -190,3 +190,23 @@ charts are in `results/`.
 ```bash
 python3 anomaly_detection.py
 ```
+
+---
+
+# Third Review — Unified AgriChainAI Chatbot
+
+One Streamlit chatbot where a deterministic supervisor routes to the **Farm Agent** (crop
+recommendation) and the **Spoilage Agent** (Paneer, dried Mango/Pineapple), or runs both in one
+conversation. No external LLM, API key or internet connection is needed.
+
+```bash
+pip install -r requirements.txt        # Python 3.10-3.12 (TensorFlow is only needed if no XGBoost pickles exist)
+python3 -m streamlit run app.py        # http://localhost:8501
+python3 -m pytest tests -q             # unit + real-model + app smoke tests
+```
+
+- `agents/orchestrator.py` — intent router, workflow state machine, execution trace
+- `agents/farm_adapter.py` — wraps `FarmAgent` (trained once per process and cached; ~tens of seconds on first launch)
+- `agents/spoilage_adapter.py` — wraps `spoilage.predictor.predict_paneer / predict_dryfruit`
+- `agents/fields.py` — input forms and validation
+- `results/third_review_integration_audit.md` — audit of the real interfaces and known limitations
